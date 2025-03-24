@@ -52,6 +52,22 @@ main:
 	ldr r5, =0xF00DF00D
 	ldr r6, =0x1337BEEF
 
+.equiv GPIO, 0x50000000
+.equiv OUTSET, GPIO + 0x508
+.equiv OUTCLR, GPIO + 0x50c
+.equiv DIRSET, GPIO + 0x518
+.equiv PIN_21, 1 << 21
+
+	// set pin 21 as out, high
+	// DIRSET
+	// OUTSET
+	// or, PIN_CNF[21]
+	ldr r0, =PIN_21
+	ldr r1, =DIRSET
+	str r0, [r1]		// can I simplify this?
+	ldr r1, =OUTSET
+	str r0, [r1]
+
 done:
 	b done
 
