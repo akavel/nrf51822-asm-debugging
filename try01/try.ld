@@ -1,5 +1,5 @@
 
-_estack = 0x20010000;
+_estack = 0x20004000;
 
 MEMORY
 {
