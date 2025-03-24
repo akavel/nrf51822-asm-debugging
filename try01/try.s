@@ -28,6 +28,8 @@ reset_handler:
 	ldr r1, =_dend
 
 	subs r2,r1,r0
+	cmp r2, #0
+	beq main
 
 	ldr r1, =_flash_dstart
 
