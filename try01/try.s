@@ -65,11 +65,34 @@ main:
 	ldr r0, =PIN_21
 	ldr r1, =DIRSET
 	str r0, [r1]		// can I simplify this?
+
+forever:
+	// enable LED r0
 	ldr r1, =OUTSET
 	str r0, [r1]
 
-done:
-	b done
+	ldr r2, =1000000
+	bl delay
+
+	// disable LED r0
+	ldr r1, =OUTCLR
+	str r0, [r1]
+
+	ldr r2, =1000000
+	bl delay
+	
+	b forever
+// done:
+// 	b done
+
+// delay r2 (cycles)
+delay:
+	cmp r2, #0		// are we done yet?
+	beq delay_done	// if yes, jump out
+	subs r2, r2, #1 // else, dec counter
+	b delay			// loop
+delay_done:
+	bx lr			// return from function call
 
 	.section .data
 
