@@ -1,21 +1,25 @@
 
 	.syntax unified
-
-	.text
+	.cpu cortex-m0
+	.thumb
 
 	.global vtable
 	.global reset_handler
+
+	.section .text
 
 vtable:
 	.word _estack
 	.word reset_handler
 	.word 0
-	.word hardfault
+	.word hardfault_handler
 	@ .size vtable, .-vtable
 
-hardfault:
-	b hardfault
+.thumb_func	
+hardfault_handler:
+	b hardfault_handler
 	
+.thumb_func	
 reset_handler:
 	ldr r0, =_estack
 	mov sp, r0
@@ -49,6 +53,6 @@ main:
 done:
 	b done
 
-	.data
+	.section .data
 
 apa:	.word 0xFEEBDAED
