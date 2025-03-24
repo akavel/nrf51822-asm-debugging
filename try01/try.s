@@ -46,11 +46,6 @@ cpy_loop:
 
 
 main:
-	ldr r4, =apa
-	ldr r4, [r4]
-
-	ldr r5, =0xF00DF00D
-	ldr r6, =0x1337BEEF
 
 .equiv GPIO, 0x50000000
 .equiv OUTSET, GPIO + 0x508
@@ -58,23 +53,20 @@ main:
 .equiv DIRSET, GPIO + 0x518
 .equiv PIN_21, 1 << 21
 
-	// set pin 21 as out, high
-	// DIRSET
-	// OUTSET
-	// or, PIN_CNF[21]
+	// set pin 21 as out
 	ldr r0, =PIN_21
 	ldr r1, =DIRSET
 	str r0, [r1]		// can I simplify this?
 
 forever:
-	// enable LED r0
+	// enable LED r0 (set as high)
 	ldr r1, =OUTSET
 	str r0, [r1]
 
 	ldr r2, =1000000
 	bl delay
 
-	// disable LED r0
+	// disable LED r0 (set as low)
 	ldr r1, =OUTCLR
 	str r0, [r1]
 
@@ -82,11 +74,8 @@ forever:
 	bl delay
 	
 	b forever
-// done:
-// 	b done
 
-// delay r2 (cycles)
-delay:
+delay: // delay r2 (cycles)
 	cmp r2, #0		// are we done yet?
 	beq delay_done	// if yes, jump out
 	subs r2, r2, #1 // else, dec counter
@@ -96,5 +85,4 @@ delay_done:
 
 	.section .data
 
-apa:	.word 0xFEEBDAED
 
