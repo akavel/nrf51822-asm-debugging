@@ -47,33 +47,57 @@ cpy_loop:
 
 main:
 
-.equiv GPIO, 0x50000000
-.equiv OUTSET, GPIO + 0x508
-.equiv OUTCLR, GPIO + 0x50c
-.equiv DIRSET, GPIO + 0x518
-.equiv PIN_21, 1 << 21
+	.equiv GPIO, 0x50000000
+	.equiv OUTSET, GPIO + 0x508
+	.equiv OUTCLR, GPIO + 0x50c
+	.equiv DIRSET, GPIO + 0x518
 
-	// set pin 21 as out
-	ldr r0, =PIN_21
+	.equiv PIN_18, 1 << 18
+	.equiv PIN_20, 1 << 20
+	.equiv PIN_22, 1 << 22
+
+	// set pins as out
+	ldr r0, =(PIN_22 + PIN_20 + PIN_18)
 	ldr r1, =DIRSET
 	str r0, [r1]		// can I simplify this?
 
 forever:
-	// enable LED r0 (set as high)
-	ldr r1, =OUTSET
-	str r0, [r1]
+	.equiv DELAY, 800000
 
-	ldr r2, =1000000
+	ldr r0, =PIN_22
+	bl high
+
+	ldr r2, =DELAY
 	bl delay
 
-	// disable LED r0 (set as low)
-	ldr r1, =OUTCLR
-	str r0, [r1]
+	bl low
 
-	ldr r2, =1000000
+	ldr r0, =PIN_20
+	bl high
+
+	ldr r2, =DELAY
 	bl delay
+
+	bl low
+
+	ldr r0, =PIN_18
+	bl high
+
+	ldr r2, =DELAY
+	bl delay
+
+	bl low
 	
 	b forever
+
+high: // set pin r0 to high
+	ldr r1, =OUTSET
+	str r0, [r1]
+	bx lr
+low: // set pin r0 to low
+	ldr r1, =OUTCLR
+	str r0, [r1]
+	bx lr
 
 delay: // delay r2 (cycles)
 	cmp r2, #0		// are we done yet?
