@@ -16,5 +16,6 @@ fn main() -> ! {
 
     loop {
         // your code goes here
+        asm::nop();
     }
 }
